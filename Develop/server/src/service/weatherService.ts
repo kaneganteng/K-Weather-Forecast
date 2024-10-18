@@ -8,16 +8,10 @@ dotenv.config();
 // TODO: Complete the WeatherService class
 class WeatherService {
   // TODO: Define the baseURL, API key, and city name properties
-  // TODO: Create fetchLocationData method
-  // private async fetchLocationData(query: string) {}
-  // TODO: Create destructureLocationData method
-  // private destructureLocationData(locationData: Coordinates): Coordinates {}
-  // TODO: Create buildGeocodeQuery method
-  // private buildGeocodeQuery(): string {}
+
   // TODO: Create buildWeatherQuery method
   // private buildWeatherQuery(coordinates: Coordinates): string {}
-  // TODO: Create fetchAndDestructureLocationData method
-  // private async fetchAndDestructureLocationData() {}
+
   // TODO: Create fetchWeatherData method
   // private async fetchWeatherData(coordinates: Coordinates) {}
   // TODO: Build parseCurrentWeather method
@@ -29,3 +23,13 @@ class WeatherService {
 }
 
 export default new WeatherService();
+
+
+  // TODO: Create fetchLocationData method *disregard
+  // private async fetchLocationData(query: string) {} *disregard
+  // TODO: Create destructureLocationData method *disregard
+  // private destructureLocationData(locationData: Coordinates): Coordinates {} *disregard
+  // TODO: Create buildGeocodeQuery method *disregard
+  // private buildGeocodeQuery(): string {} *disregard
+  // TODO: Create fetchAndDestructureLocationData method *disregard
+  // private async fetchAndDestructureLocationData() {} *disregard
