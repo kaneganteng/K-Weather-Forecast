@@ -31,5 +31,5 @@ export default new WeatherService();
   // private destructureLocationData(locationData: Coordinates): Coordinates {} *disregard
   // TODO: Create buildGeocodeQuery method *disregard
   // private buildGeocodeQuery(): string {} *disregard
-  // TODO: Create fetchAndDestructureLocationData method *disregard
+    // TODO: Create fetchAndDestructureLocationData method *disregard
   // private async fetchAndDestructureLocationData() {} *disregard
