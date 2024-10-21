@@ -43,9 +43,18 @@ class HistoryService {
   // Add a city to the search history
   public async addCity(name: string): Promise<void> {
     const cities = await this.getCities();
-    const newCity = new City(name); //create a new City object with a generated ID
-    cities.push(newCity); // Add the new city to the  array
-    await this.write(cities); // Write the updated array back to the file
+    let cityInArray = false;
+    for (let city of cities) {
+      if (city.name === name) {
+        cityInArray = true;
+      }
+      }
+      if (cityInArray === false) {
+        const newCity = new City(name); //create a new City object with a generated ID
+        cities.push(newCity); // Add the new city to the  array
+        await this.write(cities); // Write the updated array back to the file
+      }
+    
   }
 
   // Remove a city from the search history by its id
