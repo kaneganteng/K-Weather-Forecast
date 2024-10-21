@@ -12,7 +12,7 @@ This application will give you the weather forecast of the current day and the n
 * [How to Contribute](#howToContribute)
 
 ## Installation
-The link to the deployed application will be here later. In order to get access to this application, you will need to follow the link.
+In order to get access to this application, you will need to follow the link. https://k-weather-forecast.onrender.com
 ## Usage
 When you have access to the applicaiton, you can type the cities that you want to check the weather for. Once you hit search, it will give you the forecast for the current weather and the weather for the next 5 days at 2 AM EDT. Here is an example of how the application will look like after you search up a city. 
 ![Screenshot of the application when it works](./assets/image.png)
