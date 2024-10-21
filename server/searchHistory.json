@@ -162,5 +162,13 @@
   {
     "name": "alaska",
     "id": "3c1cb0c9-3acf-4b7d-8e3f-82c930ae6dc8"
+  },
+  {
+    "name": "philadelphia",
+    "id": "32ac83d4-d380-49b7-86d9-acc4698a3bc3"
+  },
+  {
+    "name": "jakarta",
+    "id": "aac92f4d-3a0a-4917-84ea-b03a15855ac1"
   }
 ]
