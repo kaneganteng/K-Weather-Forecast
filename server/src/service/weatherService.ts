@@ -110,10 +110,10 @@ class WeatherService {
 
       console.log(`Processing entry with time: ${date} and hours: ${hours}`);
 
-      if (hours !== '02') {
-        // console.log(`Skipping entry for ${date} (hours: ${hours}), not 02:00`);
+      if (hours !== '12') {
+        // console.log(`Skipping entry for ${date} (hours: ${hours}), not 12:00`);
         continue;
-      } //skipp entries taht are not at 02:00:00
+      } //skipp entries taht are not at 12:00:00
 
       const formattedDate = date.toLocaleDateString('en-US', {
         month: '2-digit',
@@ -139,7 +139,7 @@ class WeatherService {
       const id = uuidv4();
 
       // Log the valid entries being added to the forecast
-      console.log(`Adding forecast for ${formattedDate} 02:00:00`, {
+      console.log(`Adding forecast for ${formattedDate} 12:00:00`, {
         city,
         icon,
         iconDescription,
@@ -153,7 +153,7 @@ class WeatherService {
         new Weather(
           city,
           id,
-          `${formattedDate} 02:00:00`,
+          `${formattedDate} 12:00:00`,
           icon,
           iconDescription,
           tempF,
