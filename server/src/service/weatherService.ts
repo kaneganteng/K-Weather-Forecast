@@ -1,12 +1,7 @@
-// import fs from 'node:fs/promises'; // not sure if this is correct
 import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
-// interface Coordinates {
-//   latitude: number;
-//   longitude: number;
-// }
 
 class Weather {
   city: string;
@@ -38,13 +33,7 @@ class Weather {
     this.humidity = humidity;
   }
 }
-// TODO: Define an interface for the Coordinates object
-// interface Location {
-//   id: string;
-// }
-// TODO: Define a class for the Weather object
 
-// TODO: Complete the WeatherService class
 class WeatherService {
   private baseURL = process.env.API_BASE_URL;
   private apiKey = process.env.API_KEY;
@@ -66,7 +55,6 @@ class WeatherService {
     }
 
     const data = await response.json();
-    // console.log('Weather API response:', data); //log the entire response for debugging
     return data;
 
   }
@@ -78,8 +66,8 @@ class WeatherService {
       throw new Error(`Failed to fetch forecast data for ${city}`);
     }
     const data = await response.json();
-    // console.log("Forecast API response:", data); // log the raw forecast data
     return data;
+
   }
   private parseCurrentWeather(response: any): Weather {
     // check if the response has the expected structure
@@ -102,8 +90,6 @@ class WeatherService {
     const forecast: Weather[] = []
     const seenDays = new Set<string>(); // Keep track of unique dates
 
-    console.log('Full forecast response:', response);
-
     for (const data of response.list) {
       const date = new Date(data.dt * 1000);
       const hours = String(date.getHours()).padStart(2, '0');
@@ -111,7 +97,6 @@ class WeatherService {
       console.log(`Processing entry with time: ${date} and hours: ${hours}`);
 
       if (hours !== '12') {
-        // console.log(`Skipping entry for ${date} (hours: ${hours}), not 12:00`);
         continue;
       } //skipp entries taht are not at 12:00:00
 
@@ -139,14 +124,14 @@ class WeatherService {
       const id = uuidv4();
 
       // Log the valid entries being added to the forecast
-      console.log(`Adding forecast for ${formattedDate} 12:00:00`, {
-        city,
-        icon,
-        iconDescription,
-        tempF,
-        windSpeed,
-        humidity
-      });
+      // console.log(`Adding forecast for ${formattedDate} 12:00:00`, {
+      //   city,
+      //   icon,
+      //   iconDescription,
+      //   tempF,
+      //   windSpeed,
+      //   humidity
+      // });
 
       // Create a Weather object and add to forecast array
       forecast.push(
@@ -173,7 +158,7 @@ class WeatherService {
   private buildForecastArray(currentWeather: Weather, forecast: Weather[]): Weather[] {
     const forecastObject: { [key: string]: any } = {};
     forecast.forEach(item => {
-      const dateKey =  item.date.split(' ')[0];
+      const dateKey = item.date.split(' ')[0];
       forecastObject[dateKey] = {
         city: currentWeather.city,
         tempF: item.tempF,
@@ -194,8 +179,8 @@ class WeatherService {
   public async getWeatherForCity(city: string): Promise<Weather | null> {
     try {
       const weatherData = await this.fetchWeatherData(city);
-     
-      // console.log(weatherData);
+
+
       return this.parseCurrentWeather(weatherData);
     } catch (error) {
       console.error(error);
@@ -215,7 +200,7 @@ class WeatherService {
   public async getWeatherWithForecast(city: string): Promise<any> {
     const currentWeather = await this.getWeatherForCity(city);
     const forecastWeather = await this.getForecastForCity(city);
-    
+
     if (!currentWeather || !forecastWeather) {
       return null;
     }
@@ -226,29 +211,3 @@ class WeatherService {
 
 export default new WeatherService();
 
-// TODO: Define the baseURL, API key, and city name properties
-
-// TODO: Create buildWeatherQuery method
-// private buildWeatherQuery(coordinates: Coordinates): string {}
-
-// TODO: Create fetchWeatherData method
-// private async fetchWeatherData(coordinates: Coordinates) {}
-// TODO: Build parseCurrentWeather method
-// private parseCurrentWeather(response: any) {}
-// TODO: Complete buildForecastArray method
-// private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
-// TODO: Complete getWeatherForCity method
-// async getWeatherForCity(city: string) {}
-
-
-
-
-
-// TODO: Create fetchLocationData method *disregard
-// private async fetchLocationData(query: string) {} *disregard
-// TODO: Create destructureLocationData method *disregard
-// private destructureLocationData(locationData: Coordinates): Coordinates {} *disregard
-// TODO: Create buildGeocodeQuery method *disregard
-// private buildGeocodeQuery(): string {} *disregard
-// TODO: Create fetchAndDestructureLocationData method *disregard
-// private async fetchAndDestructureLocationData() {} *disregard

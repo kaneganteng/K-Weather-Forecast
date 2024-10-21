@@ -7,7 +7,8 @@ const router = Router();
 
 // logging __dirname so that typescript allows me to run this
 console.log(__dirname);
-// TODO: Define route to serve index.html
+
+// Define route to serve index.html
 router.get('*', (_req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 })

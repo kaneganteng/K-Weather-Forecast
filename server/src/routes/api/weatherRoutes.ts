@@ -7,10 +7,7 @@ const router = Router();
 import HistoryService from '../../service/historyService.js';
 import WeatherService from '../../service/weatherService.js';
 
-// WeatherService.baseURL = process.env.API_BASE_URL;
-// WeatherService.apiKey = process.env.API_KEY;
-
-// TODO: POST Request with city name to retrieve weather data
+// POST Request with city name to retrieve weather data
 router.post('/', async (req: Request, res: Response) => {
   try {
     const cityName = req.body.cityName;
@@ -35,7 +32,7 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-// TODO: GET search history
+// GET search history
 router.get('/history', async (_req: Request, res: Response) => {
   try {
     const searchHistory = await HistoryService.getCities();
@@ -44,7 +41,7 @@ router.get('/history', async (_req: Request, res: Response) => {
     return res.status(500).json({ message: 'Error retrieving search history.' });
   }
 });
-// * BONUS TODO: DELETE city from search history
+// DELETE city from search history
 router.delete('/history/:id', async (req: Request, res: Response) => {
   const cityId = req.params.id;
 
