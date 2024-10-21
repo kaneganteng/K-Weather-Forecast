@@ -11,8 +11,6 @@ console.log(__dirname);
 router.get('*', (_req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 })
-// router.get('*', (_req: Request, res: Response) => {
-//     res.sendFile(path.join(__dirname, "../../client/dist/index.html"));
-// });
+
 
 export default router;

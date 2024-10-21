@@ -7,50 +7,30 @@ const router = Router();
 import HistoryService from '../../service/historyService.js';
 import WeatherService from '../../service/weatherService.js';
 
-WeatherService.apiKey  = process.env.API_KEY;
-WeatherService.baseURL = process.env.API_BASE_URL;
-
+// WeatherService.baseURL = process.env.API_BASE_URL;
+// WeatherService.apiKey = process.env.API_KEY;
 
 // TODO: POST Request with city name to retrieve weather data
 router.post('/', async (req: Request, res: Response) => {
-  const cityName = req.body.cityName;
-
-  if (!cityName) {
-    return res.status(400).json({ message: 'City name is required.' });
-  }
-
   try {
-    const weatherData = await WeatherService.getWeatherForCity(cityName);
-    console.log(weatherData);
-    if (!weatherData) {
-      return res.status(404).json({ message: 'Weather data not found for the specified city.' });
+    const cityName = req.body.cityName;
+    if (!cityName) {
+      return res.status(400).send({ error: "Provide a city!" });
+    }
+    const weatherWithForecast = await WeatherService.getWeatherWithForecast(cityName);
+    
+    if (!weatherWithForecast) {
+      return res.status(404).send({ error: 'Could not find city or weather data' });
     }
 
     // Save the city to search history
     await HistoryService.addCity(cityName);
 
-    return res.status(200).json(weatherData);
+    // Send combined current weather and forecast data
+    return res.status(200).json(weatherWithForecast);
   } catch (error) {
-    return res.status(500).json({ message: 'Error fetching weather data.'});
-  }
-});
-// TODO: GET 5-day forecast for a city
-router.get('/forecast', async (req: Request, res: Response) => {
-  const cityName = req.query.cityName as string;
-
-  if (!cityName) {
-    return res.status(400).json({ message: 'City name is required.' });
-  }
-
-  try {
-    const forecastData = await WeatherService.getForecastForCity(cityName);
-    if (!forecastData) {
-      return res.status(404).json({ message: 'Forecast data not found for the specified city.' });
-    }
-
-    return res.status(200).json(forecastData);
-  } catch (error) {
-    return res.status(500).json({ message: 'Error fetching forecast data.'});
+    console.error('Error fetching weather data:', error);
+    return res.status(500).send('Error fetching weather data');
   }
 });
 
@@ -60,7 +40,7 @@ router.get('/history', async (_req: Request, res: Response) => {
     const searchHistory = await HistoryService.getCities();
     return res.status(200).json(searchHistory);
   } catch (error) {
-    return res.status(500).json({ message: 'Error retrieving search history.'});
+    return res.status(500).json({ message: 'Error retrieving search history.' });
   }
 });
 // * BONUS TODO: DELETE city from search history
@@ -71,7 +51,7 @@ router.delete('/history/:id', async (req: Request, res: Response) => {
     await HistoryService.removeCity(cityId);
     return res.status(200).json({ message: 'City removed from search history.' });
   } catch (error) {
-    return res.status(500).json({ message: 'Error removing city from history.'});
+    return res.status(500).json({ message: 'Error removing city from history.' });
   }
 });
 
