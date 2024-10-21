@@ -1,5 +1,6 @@
 // import fs from 'node:fs/promises'; // not sure if this is correct
 import dotenv from 'dotenv';
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 // interface Coordinates {
@@ -9,6 +10,7 @@ dotenv.config();
 
 class Weather {
   city: string;
+  id: string;
   date: string;
   icon: string;
   iconDescription: string;
@@ -18,6 +20,7 @@ class Weather {
 
   constructor(
     city: string,
+    id: string,
     date: string,
     icon: string,
     iconDescription: string,
@@ -26,6 +29,7 @@ class Weather {
     humidity: number,
   ) {
     this.city = city;
+    this.id = id;
     this.date = date;
     this.icon = icon;
     this.iconDescription = iconDescription;
@@ -84,6 +88,7 @@ class WeatherService {
     }
 
     const city = response.name;
+    const id = uuidv4();
     const date = new Date(response.dt * 1000).toString();
     const icon = response.weather[0].icon;
     const iconDescription = response.weather[0].description;
@@ -91,7 +96,7 @@ class WeatherService {
     const windSpeed = response.wind.speed;
     const humidity = response.main.humidity;
 
-    return new Weather(city, date, icon, iconDescription, tempF, windSpeed, humidity);
+    return new Weather(city, id, date, icon, iconDescription, tempF, windSpeed, humidity);
   }
   private parseForecast(response: any): Weather[] {
     const forecast: Weather[] = []
@@ -106,7 +111,7 @@ class WeatherService {
       console.log(`Processing entry with time: ${date} and hours: ${hours}`);
 
       if (hours !== '02') {
-        console.log(`Skipping entry for ${date} (hours: ${hours}), not 02:00`);
+        // console.log(`Skipping entry for ${date} (hours: ${hours}), not 02:00`);
         continue;
       } //skipp entries taht are not at 02:00:00
 
@@ -121,12 +126,17 @@ class WeatherService {
       if (seenDays.has(formattedDate)) continue;
       seenDays.add(formattedDate);
 
+      if (!response.city?.name || !data.weather || !data.main) {
+        console.error(`Invalid data structure for entry on ${formattedDate}`);
+        continue;
+      }
       const city = response.city.name;
       const icon = data.weather[0].icon;
       const iconDescription = data.weather[0].description;
       const tempF = data.main.temp;
       const windSpeed = data.wind.speed;
       const humidity = data.main.humidity;
+      const id = uuidv4();
 
       // Log the valid entries being added to the forecast
       console.log(`Adding forecast for ${formattedDate} 02:00:00`, {
@@ -142,9 +152,10 @@ class WeatherService {
       forecast.push(
         new Weather(
           city,
+          id,
           `${formattedDate} 02:00:00`,
           icon,
-          iconDescription, 
+          iconDescription,
           tempF,
           windSpeed,
           humidity
@@ -159,32 +170,31 @@ class WeatherService {
     return forecast;
   }
 
-  private buildForecastArray(currentWeather: Weather, forecast: Weather[]): any {
-    return {
-      city: currentWeather.city,
-      current: {
-        date: currentWeather.date,
-        tempF: currentWeather.tempF,
-        windSpeed: currentWeather.windSpeed,
-        humidity: currentWeather.humidity,
-        icon: currentWeather.icon,
-        iconDescription: currentWeather.iconDescription,
-      },
-      forecast: forecast.map((item) => ({
-        date: item.date,
+  private buildForecastArray(currentWeather: Weather, forecast: Weather[]): Weather[] {
+    const forecastObject: { [key: string]: any } = {};
+    forecast.forEach(item => {
+      const dateKey =  item.date.split(' ')[0];
+      forecastObject[dateKey] = {
+        city: currentWeather.city,
         tempF: item.tempF,
         windSpeed: item.windSpeed,
         humidity: item.humidity,
         icon: item.icon,
         iconDescription: item.iconDescription,
-      })),
-    };
+        id: item.id
+      };
+    });
+
+    forecast.unshift(currentWeather);
+
+    return forecast;
   }
 
 
   public async getWeatherForCity(city: string): Promise<Weather | null> {
     try {
       const weatherData = await this.fetchWeatherData(city);
+     
       // console.log(weatherData);
       return this.parseCurrentWeather(weatherData);
     } catch (error) {
@@ -205,7 +215,7 @@ class WeatherService {
   public async getWeatherWithForecast(city: string): Promise<any> {
     const currentWeather = await this.getWeatherForCity(city);
     const forecastWeather = await this.getForecastForCity(city);
-
+    
     if (!currentWeather || !forecastWeather) {
       return null;
     }

@@ -15,22 +15,23 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     const cityName = req.body.cityName;
     if (!cityName) {
-      return res.status(400).send({ error: "Provide a city!" });
+      res.status(400).send({ error: "Provide a city!" });
     }
     const weatherWithForecast = await WeatherService.getWeatherWithForecast(cityName);
     
     if (!weatherWithForecast) {
-      return res.status(404).send({ error: 'Could not find city or weather data' });
+      res.status(404).send({ error: 'Could not find city or weather data' });
     }
 
     // Save the city to search history
     await HistoryService.addCity(cityName);
 
     // Send combined current weather and forecast data
-    return res.status(200).json(weatherWithForecast);
+    // return res.status(200).json(weatherWithForecast);
+    res.send(weatherWithForecast);
   } catch (error) {
     console.error('Error fetching weather data:', error);
-    return res.status(500).send('Error fetching weather data');
+    res.status(500).send('Error fetching weather data');
   }
 });
 
